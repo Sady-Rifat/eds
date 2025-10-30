@@ -1,47 +1,91 @@
 // eslint-disable-next-line import/no-unresolved
 import { toClassName } from '../../scripts/aem.js';
 
+/**
+ * Initializes a tabs block with sliding indicator
+ * @param {HTMLElement} block The tabs block element
+ */
 export default async function decorate(block) {
-  // build tablist
-  const tablist = document.createElement('div');
-  tablist.className = 'tabs-list';
-  tablist.setAttribute('role', 'tablist');
+  block.classList.add('tabs');
 
-  // decorate tabs and tabpanels
+  // Create content wrapper
+  const content = document.createElement('div');
+  content.className = 'tabs-content';
+
+  // Process tabs
   const tabs = [...block.children].map((child) => child.firstElementChild);
   tabs.forEach((tab, i) => {
     const id = toClassName(tab.textContent);
 
-    // decorate tabpanel
-    const tabpanel = block.children[i];
-    tabpanel.className = 'tabs-panel';
-    tabpanel.id = `tabpanel-${id}`;
-    tabpanel.setAttribute('aria-hidden', !!i);
-    tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
-    tabpanel.setAttribute('role', 'tabpanel');
+    // Create tab item
+    const li = document.createElement('li');
+    li.className = 'tabs-nav-item';
+    li.setAttribute('role', 'tab');
+    li.id = `tab-${id}`;
+    li.innerHTML = tab.innerHTML;
+    li.setAttribute('aria-controls', `tabpanel-${id}`);
+    li.setAttribute('aria-selected', !i);
+    if (i === 0) li.classList.add('active');
+    tablist.appendChild(li);
 
-    // build tab button
-    const button = document.createElement('button');
-    button.className = 'tabs-tab';
-    button.id = `tab-${id}`;
-    button.innerHTML = tab.innerHTML;
-    button.setAttribute('aria-controls', `tabpanel-${id}`);
-    button.setAttribute('aria-selected', !i);
-    button.setAttribute('role', 'tab');
-    button.setAttribute('type', 'button');
-    button.addEventListener('click', () => {
-      block.querySelectorAll('[role=tabpanel]').forEach((panel) => {
-        panel.setAttribute('aria-hidden', true);
-      });
-      tablist.querySelectorAll('button').forEach((btn) => {
-        btn.setAttribute('aria-selected', false);
-      });
-      tabpanel.setAttribute('aria-hidden', false);
-      button.setAttribute('aria-selected', true);
-    });
-    tablist.append(button);
+    // Setup panel
+    const panel = block.children[i];
+    panel.className = `tabs-panel${i === 0 ? ' active' : ''}`;
+    panel.id = `tabpanel-${id}`;
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', `tab-${id}`);
+    content.appendChild(panel);
+
+    // Remove original tab
     tab.remove();
   });
 
-  block.prepend(tablist);
-}
+  // Handle clicks and indicator
+  function updateIndicator(activeTab) {
+    if (!activeTab) return;
+    const tabRect = activeTab.getBoundingClientRect();
+    const navRect = tablist.getBoundingClientRect();
+    tablist.style.setProperty('--indicator-width', `${tabRect.width}px`);
+    tablist.style.setProperty('--indicator-left', `${tabRect.left - navRect.left}px`);
+  }
+
+  // Set initial indicator position
+  const activeTab = tablist.querySelector('.tabs-nav-item.active');
+  if (activeTab) updateIndicator(activeTab);
+
+  // Update indicator on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      updateIndicator(tablist.querySelector('.tabs-nav-item.active'));
+    }, 100);
+  });
+
+  tablist.addEventListener('click', (e) => {
+    const tab = e.target.closest('.tabs-nav-item');
+    if (!tab) return;
+
+    const index = Array.from(tablist.children).indexOf(tab);
+    
+    // Update tabs
+    tablist.querySelectorAll('.tabs-nav-item').forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+      t.setAttribute('aria-selected', i === index);
+    });
+
+    // Update panels
+    content.querySelectorAll('.tabs-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+
+    // Update indicator and scroll
+    updateIndicator(tab);
+    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  });
+
+  // Add to DOM
+  block.innerHTML = '';
+  block.appendChild(tablist);
+  block.appendChild(content);
+};

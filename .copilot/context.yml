@@ -1,0 +1,104 @@
+# context.yml
+# Project: Edge Delivery System (EDS) for Adobe Experience Manager (AEM)
+# Purpose: Provide contextual information for GitHub Copilot or other AI coding assistants
+# Scope: Used for assisting code generation, component structure, and AEM EDS best practices.
+
+project:
+  name: "Edge Delivery System (EDS)"
+  type: "AEM Edge Delivery Services Frontend"
+
+  description: >
+    Edge Delivery System (EDS) for Adobe Experience Manager (AEM) is a headless,
+    edge-optimized web delivery framework. It leverages AEM’s authoring capabilities
+    and an edge runtime environment to render modular “blocks” that combine HTML,
+    CSS, and JavaScript into semantic, performant, and globally cached experiences.
+
+  architecture_overview: |
+    Content Source (Google Docs / Word / AEM Authoring)
+          │
+          ▼
+    AEM Authoring / CMS ─────────► Converts to semantic HTML + block structure
+              │                                   │
+              │ (authoring actions)               │ (content transformation)
+              ▼                                   ▼
+    Publish Trigger ─────────────► Edge Delivery Service (CDN / Edge Cache)
+              │                                   │
+              │ (path mapping / cache purge)      │ (delivery optimization)
+              ▼                                   ▼
+    Rendered Page ───────────────► User Browser (hydrated with blocks, styles, and JS)
+
+  workflow:
+    - Author edits or updates page content in AEM or Google Docs.
+    - AEM transforms authored content into HTML enriched with semantic blocks.
+    - EDS fetches and caches this content at the edge runtime.
+    - Each block (component) applies styling and interactive logic dynamically.
+    - Pages are served from the nearest CDN node for ultra-low latency.
+
+  goals:
+    - Optimize global content delivery through edge rendering.
+    - Support modular, reusable “block”-based architecture.
+    - Enable fast CI/CD deployments to AEM as a Cloud Service and Edge Network.
+    - Ensure accessibility, performance, and SEO best practices.
+    - Maintain code readability and consistency across teams.
+
+  tech_stack:
+    frontend:
+      - HTML5
+      - CSS3 / PostCSS
+      - Vanilla JavaScript (ES6+)
+    infrastructure:
+      - AEM as a Cloud Service
+      - Edge CDN (Akamai / Fastly / Cloudflare)
+    tools:
+      - GitHub Actions / Adobe Cloud Manager for CI/CD
+      - Prettier / ESLint for code quality
+
+  folder_structure:
+    - /blocks/{componentName}/
+        ├── {componentName}.css      # Component styling
+        └── {componentName}.js       # Component logic and DOM manipulation
+    - /scripts/                       # Global scripts
+    - /styles/                        # Global styles or theme overrides
+    - /icons/                         # SVG or icon assets
+    - /fonts/                         # Web font files
+
+  key_modules:
+    - blocks
+    - fonts
+    - icons
+    - scripts
+    - styles
+
+ai_guidance:
+  purpose: >
+    Guide Copilot or AI tools to generate, refactor, or assist in writing modular
+    EDS components under '/blocks/{componentName}' that align with AEM + Edge
+    architecture and naming conventions.
+  conventions:
+    - Each block must be self-contained (HTML, CSS, JS in its folder).
+    - JS should initialize the block based on a query selector for the block name.
+    - Use semantic markup and BEM-like class naming.
+    - Prefer functional, minimal JS (avoid heavy DOM reflows).
+  preferred_style:
+    - CSS: use component-level selectors only.
+    - JS: export an init function like `init(el)` for block initialization.
+    - HTML: minimal placeholder markup, rendered dynamically when needed.
+  example_block_structure: |
+    /blocks/hero/
+      ├── hero.css
+      └── hero.js
+  example_init_snippet: |
+    export default function init(el) {
+      const title = el.querySelector('h1');
+      // Add logic to enhance block behavior
+    }
+
+exclude:
+  - node_modules/
+  - dist/
+  - build/
+  - .git/
+  - .idea/
+  - .vscode/
+  - target/
+  - tmp/
