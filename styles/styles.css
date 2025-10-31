@@ -161,13 +161,14 @@ button {
 
 /* links */
 a:any-link {
-  color: var(--link-color);
+  color: #00607e;
   text-decoration: none;
   overflow-wrap: break-word;
 }
 
 a:hover {
-  color: var(--link-hover-color);
+  color: #00607e;
+  opacity: 0.8;
   text-decoration: underline;
 }
 

@@ -1,9 +1,12 @@
+
 .tabs .tabs-list {
   display: flex;
-  gap: 0.5ch;
+  gap: 12px;
   max-width: 100%;
   font-size: var(--body-font-size-xs);
   overflow-x: auto;
+  align-items: flex-end;
+  padding-bottom: 8px;
 }
 
 @media (width >= 600px) {
@@ -21,37 +24,89 @@
 .tabs .tabs-list button {
   flex: 0 0 max-content;
   margin: 0;
-  border: 1px solid #dadada;
+  border: 0;
   border-radius: 0;
-  padding: 0.5em;
-  background-color: var(--light-color);
-  color: initial;
-  font-weight: bold;
-  line-height: unset;
+  padding: 12px 32px;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  line-height: 1.2;
   text-align: initial;
   text-overflow: unset;
   overflow: unset;
-  white-space: unset;
-  transition: background-color 0.2s;
+  white-space: nowrap;
+  position: relative;
 }
 
-.tabs .tabs-list button p {
-  margin: 0;
+.tabs .tabs-list button p { margin: 0; }
+
+
+.tabs .tabs-list button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 4px;
+  background-color: #e5e7eb; /* light gray underline for inactive */
 }
 
-
-.tabs .tabs-list button[aria-selected='true'] {
-  border-bottom: 1px solid var(--background-color);
-  background-color: var(--background-color);
-  cursor: initial;
+.tabs .tabs-list button[aria-selected='true']::after {
+  background-color: #2ea39f;
 }
 
 .tabs .tabs-panel {
-  margin-top: -1px;
-  padding: 24px;
-  border: 1px solid #dadada;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
   overflow: auto;
 }
+
+/* basic table design inside tabs */
+.tabs .tabs-panel table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: var(--body-font-size-xs);
+  
+  background-color: #fff;
+}
+
+@media (width >= 600px) {
+  .tabs .tabs-panel table { font-size: var(--body-font-size-s); }
+}
+
+@media (width >= 900px) {
+  .tabs .tabs-panel table { font-size: var(--body-font-size-m); }
+}
+
+.tabs .tabs-panel thead tr {
+  background-color: var(--light-color);
+  border-top: 0;
+  border-bottom: 2px solid #dadada;
+}
+
+.tabs .tabs-panel tbody tr { border-bottom: 1px solid #dadada; }
+.tabs .tabs-panel tbody tr:nth-child(even) { background-color: #fafafa; }
+
+.tabs .tabs-panel th { font-weight: 700; color: var(--text-color); }
+
+.tabs .tabs-panel th,
+.tabs .tabs-panel td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tabs .tabs-panel td p,
+.tabs .tabs-panel th p { margin: 0; }
+
+.tabs .tabs-panel td p + p { margin-top: 0.25em; }
+
+/* optional striped and bordered helpers if author adds classes */
+.tabs .tabs-panel table.striped tbody tr:nth-child(odd) { background-color: var(--light-color); }
+.tabs .tabs-panel table.bordered th,
+.tabs .tabs-panel table.bordered td { border: 1px solid #dadada; }
 
 .tabs .tabs-panel[aria-hidden='true'] {
   display: none;
