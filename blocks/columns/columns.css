@@ -1,4 +1,4 @@
-.columns > div {
+/* .columns > div {
   display: flex;
   flex-direction: column;
 }
@@ -23,6 +23,43 @@
   .columns > div {
     align-items: center;
     flex-direction: unset;
+    gap: 24px;
+  }
+
+  .columns > div > div {
+    flex: 1;
+    order: unset;
+  }
+} */
+
+
+.columns > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns img {
+  width: 100%;
+}
+
+.columns > div > div {
+  order: 1;
+}
+
+.columns > div > .columns-img-col {
+  order: 0;
+}
+
+.columns > div > .columns-img-col img {
+  display: block;
+}
+
+/* Desktop layout */
+@media (width >= 900px) {
+  .columns > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 24px;
   }
 

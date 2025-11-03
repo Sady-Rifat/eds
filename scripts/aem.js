@@ -423,6 +423,40 @@ function decorateButtons(element) {
       }
     }
   });
+
+  // Additional: convert specific CTAs into stacked action buttons (visit shop, request a quote, contact us)
+  element.querySelectorAll('a').forEach((a) => {
+    const text = (a.textContent || '').trim().toLowerCase();
+    let cls = '';
+    let iconSVG = '';
+    if (text === 'visit shop' || text === 'visit the shop') {
+      cls = 'button action action-visit';
+      // simple cart icon
+      iconSVG = '<svg class="icon-inline" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14l.84-2h7.45c.75 0 1.41-.41 1.75-1.03l2.58-5.17-1.9-.95L16.1 9H9.21L8.5 7H4v2h2l3.6 7.59-1.35 2.45C8.52 19.37 9.48 20 10.6 20h8v-2h-7.42c-.14 0-.25-.11-.25-.25L12.1 14H7.16z"/></svg>';
+    } else if (text === 'request a quote' || text === 'request quote') {
+      cls = 'button action action-quote';
+      // simple document icon
+      iconSVG = '<svg class="icon-inline" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2zm9 7V3.5L18.5 9H15zM8 12h8v2H8zm0 4h5v2H8z"/></svg>';
+    } else if (text === 'contact us' || text === 'contact') {
+      cls = 'button action action-contact';
+      // simple envelope icon
+      iconSVG = '<svg class="icon-inline" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
+    }
+    if (cls) {
+      // prefer wrapping container
+      const up = a.parentElement;
+      if (up && (up.tagName === 'P' || up.tagName === 'DIV')) up.classList.add('button-container');
+      a.classList.add(...cls.split(' '));
+      // append icon if not present
+      if (!a.querySelector('.icon-inline')) {
+        a.insertAdjacentHTML('beforeend', iconSVG);
+      }
+      // if the parent container should be narrow, add helper class (optional: can be set in markup)
+      if (!up.classList.contains('action-vertical') && up.closest('.column') && up.closest('.column').classList.contains('narrow')) {
+        up.classList.add('action-vertical');
+      }
+    }
+  });
 }
 
 /**

@@ -1,0 +1,30 @@
+.separator {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 32px 0; /* keeps vertical spacing */
+}
+
+.separator-line {
+  width: 100%;
+  border: none;
+  border-top: 2px solid transparent; /* transparent line */
+  background: transparent;
+}
+
+/* Optional variants */
+.separator-dashed .separator-line {
+  border-top-style: dashed;
+}
+
+.separator-thick .separator-line {
+  border-top-width: 4px;
+}
+
+.separator-thin .separator-line {
+  border-top-width: 1px;
+}
+
+.separator-centered .separator-line {
+  width: 60%;
+}
